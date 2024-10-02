@@ -1,485 +1,159 @@
-<html lang="en">
-<link type="text/css" rel="stylesheet" id="dark-mode-custom-link" />
-<link type="text/css" rel="stylesheet" id="dark-mode-general-link" />
-<style type="text/css" id="dark-mode-custom-style" lang="en"></style>
-<style type="text/css" id="dark-mode-native-style" lang="en"></style>
-<style type="text/css" id="dark-mode-native-sheet" lang="en"></style>
-
+<h2></h2>
+<html>
 <head>
-    <meta charset="UTF-8" />
-    <title>Live Stream Tv</title>
-    <link rel="icon" href="https://i.postimg.cc/63nNfFKF/Altogether.pn" type="image/x-icon" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="https://content.jwplatform.com/libraries/SAHhwvZq.js"></script>
-    <!-- popup -->
-    <!-- popup -->
-</head>
 
-<body data-new-gr-c-s-check-loaded="8.904.0" data-gr-ext-installed="">
-    <style>
-        .alert {
-            padding: 20px;
-            border-radius: 5px;
-            background-color: #292828;
-            color: #817b8b;
-        }
-
-        .closebtn {
-            margin-left: 15px;
-            color: white;
-            font-weight: bold;
-            float: right;
-            font-size: 22px;
-            line-height: 20px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .closebtn:hover {
-            color: black;
-        }
-    </style>
-    <style>
-        /* VARIABLES */
-
-        /* BASE */
-
-        html,
-        body {
-            font-family: "Roboto", sans-serif;
-            font-size: 1em;
-            background-color: #000000;
-            line-height: 1.4;
-            height: 100%;
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.6.2/dist/plyr.css" />
+<script src="https://cdn.jsdelivr.net/npm/plyr@3.6.12/dist/plyr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.1.4/dist/hls.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<style>
+        html {
+            font-family: Poppins;
+            background: #000 ;
             margin: 0;
-            padding: 0;
+            padding: 0
         }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .containerbox {
-            overflow: hidden;
-            *zoom: 1;
-            margin: 0 10px;
-        }
-
-        .site-content {
-            padding: 20px;
-        }
-
-        /* HEADER */
-
-        .header {
-            left: 0;
-            right: 0;
-            text-align: center;
-            height: 55px;
-            line-height: 55px;
-            color: #000000;
-            background-color: #ff0000;
-            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-        }
-
-        .header__logo {
-            font-weight: 700;
-            padding: 0 25px;
-            display: inline-block;
-        }
-
-        /* MENU */
-
-        .menu {
-            float: left;
-        }
-
-        .menu a {
-            padding: 0 10px;
-        }
-
-        .menu a:hover {
-            color: #c5cae9;
-        }
-
-        /* RESPONSIVE */
-
-        @media only screen and (max-width: 768px) {
-            .site-pusher,
-            .site-container {
-                height: 100%;
-            }
-            .site-container {
-                overflow: hidden;
-            }
-            .site-pusher {
-                transition-duration: 0.3s;
-                transform: translateX(0px);
-            }
-            .site-content {
-                position: absolute;
-                top: 55px;
-                right: 0;
-                left: 0;
-                bottom: 0;
-                padding-top: 0;
-                overflow-y: scroll;
-                -webkit-overflow-scrolling: touch;
-            }
-            .header__icon {
-                position: relative;
-                display: block;
-                float: left;
-                width: 50px;
-                height: 50px;
-                cursor: pointer;
-            }
-            .header__icon:after {
-                content: "";
-                position: absolute;
-                display: block;
-                width: 1rem;
-                height: 0;
-                top: 16px;
-                left: 15px;
-                box-shadow: 0 10px 0 1px #fff, 0 16px 0 1px #fff, 0 22px 0 1px #fff;
-            }
-            .menu {
-                position: absolute;
-                left: 0;
-                top: 0;
-                bottom: 0;
-                background-color: #3849a2;
-                /*    overflow-y: scroll;
-          -webkit-overflow-scrolling: touch;*/
-                width: 250px;
-                transform: translateX(-250px);
-            }
-            .menu a {
-                display: block;
-                height: 40px;
-                text-align: center;
-                line-height: 40px;
-                border-bottom: 1px solid #3f51b5;
-            }
-            .with--sidebar .site-pusher {
-                transform: translateX(250px);
-            }
-            .with--sidebar .site-cache {
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background-color: rgba(0, 0, 0, 0.6);
-            }
-        }
-
-        .block {
-            margin-top: 3px;
-            margin-bottom: 3px;
-            border-radius: 4px;
-            flex-direction: row;
-            display: block;
-            width: auto;
-            border: none;
-            background-color: #069994;
-            color: black;
-            padding: 10px 28px;
-            font-size: 16px;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .block:hover {
-            box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
-            background-color: #ddd;
-            color: black;
-        }
-
-        h3 {
-            text-align: center;
-            max-width: 320px;
-        }
-
-        .button-area {
-            margin: 5px auto;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            max-width: 320px;
-        }
-
-        .button-area a {
-            background: #ff9b05;
-            padding: 1em 2.4em;
-            font-size: 0.9em;
-            margin: 1em;
-            color: white;
-            text-decoration: none;
-            flex-grow: 1;
-            text-align: center;
-        }
-
-        .button-area-line {
-            margin: 1px auto;
-            display: -webkit-box;
-            display: -moz-box;
-            display: -ms-flexbox;
-            display: -webkit-flex;
-            display: flex;
-            -webkit-flex-direction: row;
-            -moz-flex-direction: row;
-            flex-direction: row;
-            justify-content: space-between;
-            flex-wrap: nowrap;
-            max-width: 100%;
-        }
-
-        .button-area-line a {
-            background: #069994;
-            padding: 1em;
-            font-size: 0.9em;
-            margin: 0.3em;
-            color: black;
-            text-decoration: none;
-            flex-grow: 1;
-            text-align: center;
-        }
-
-        .modal {
-            display: none;
+        .loading {
             position: fixed;
-            z-index: 1;
-            left: 0;
             top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
+            background: #000;
+            z-index: 9999;
         }
 
-        .modal-content {
-            background-color: white;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 50%;
-            text-align: center;
-            position: relative;
-        }
-
-        .close {
+        .loading-text {
             position: absolute;
             top: 0;
+            bottom: 0;
+            left: 0;
             right: 0;
-            font-size: 28px;
-            font-weight: bold;
-            color: #aaa;
-            padding: 0 12px;
-            cursor: pointer;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-      
-      
-      
-      
-      
-      .popup {
-            display: none; /* Hidden by default */
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-            display: flex; /* Centering with flex */
-            justify-content: center;
-            align-items: center;
-        }
-
-       .popup {
-            display: none; /* Hidden by default */
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-            display: flex; /* Centering with flex */
-            justify-content: center;
-            align-items: center;
-        }
-
-        .popup-content {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px; /* Rounded corners */
-            width: 80%;
-            max-width: 600px; /* Adjust max width if needed */
+            margin: auto;
             text-align: center;
-            position: relative; /* Position for the timer */
+            width: 100%;
+            height: 100px;
+            line-height: 100px;
         }
 
-        .timer {
-            font-size: 20px;
-            margin-top: 10px;
-            color: black;
-        }</style>
-  
-    <!-- partial:index.partial.html -->
-    <div class="site-container">
-        <div class="site-pusher">
-            <header class="header">
+        .loading-text span {
+            display: inline-block;
+            margin: 0 5px;
+            color: #ff0000;
+            font-family: 'Quattrocento Sans', sans-serif;
+        }
 
-            </header>
-            <div class="site-content">
-                <div class="containerbox">
-                    <center>
+        .loading-text span:nth-child(1) {
+            filter: blur(0px);
+            animation: blur-text 1.5s 0s infinite linear alternate;
+        }
 
-                        <h4 style="color: #069994;"></h4>
-                        <!--Video Player Start-->
-                        <div id="player-container"></div>
-                        <script>
-                            // Initialize JW Player
-                            var player = jwplayer("player-container");
+        .loading-text span:nth-child(2) {
+            filter: blur(0px);
+            animation: blur-text 1.5s 0.2s infinite linear alternate;
+        }
 
-                            // Setup JW Player configuration
-                            player.setup({
-                                "file": "https://d2hrvno5bw6tg2.cloudfront.net/smrtv-ch02/_definst_/smil:ch-02.smil/master.m3u8",
-                                "width": "100%",
-                                stretching: "",
-                                "type": "hls",
-                                "autostart": "true",
-                                "mute": "false",
-                                "primary": "html5",
-                                "logo": {
-                                    "file": "https://i.postimg.cc/63nNfFKF/Altogether.png",
-                                    "hide": "false",
-                                    "position": "top-right"
-                                }
-                            });
-                        </script>
-                    </center>
-                    <!--Video Player End-->
+        .loading-text span:nth-child(3) {
+            filter: blur(0px);
+            animation: blur-text 1.5s 0.4s infinite linear alternate;
+        }
 
+        .loading-text span:nth-child(4) {
+            filter: blur(0px);
+            animation: blur-text 1.5s 0.6s infinite linear alternate;
+        }
 
+        .loading-text span:nth-child(5) {
+            filter: blur(0px);
+            animation: blur-text 1.5s 0.8s infinite linear alternate;
+        }
 
-			
-                    
-                    <div id="loading-message" style="text-align: center; margin: 20px; color: red;">
-    Video will take time to load so please wait.
-</div>
+        .loading-text span:nth-child(6) {
+            filter: blur(0px);
+            animation: blur-text 1.5s 1s infinite linear alternate;
+        }
 
+        .loading-text span:nth-child(7) {
+            filter: blur(0px);
+            animation: blur-text 1.5s 1.2s infinite linear alternate;
+        }
 
-
-                    <!-- BEGIN: Powered by Supercounters.com -->
-    <center>
-        <script type="text/javascript" src="//widget.supercounters.com/ssl/online_i.js"></script>
-        <script type="text/javascript">sc_online_i(1698961,"0000000","e61c1c");</script>
-        <br>
-        <noscript><a href="https://www.supercounters.com/">free online counter</a></noscript>
-    </center>
-    <!-- END: Powered by Supercounters.com -->
-    
-    <br>
-
-		<div id="popup" class="popup">
-    <div class="popup-content">
-        <h2>Ads!</h2>
-        <p>Auto Close After 3 sec!</p>
-        <div id="ad-container">
-            <iframe data-aa='2354955' src='//ad.a-ads.com/2354955?size=300x600' style='width:300px; height:600px; border:0px; padding:0; overflow:hidden; background-color: transparent;'></iframe>
-        </div>
-        <div class="timer" id="timer">This popup will close in <span id="countdown">3</span> seconds.</div>
-        <button onclick="window.location.href='https://www.cpmrevenuegate.com/ppy3hyjk?key=1a5064295c5e5aa423b626992ead188e'">Join Group</button>
-    </div>
-</div>
-
-<script>
-    let countdownTime = 3; // Countdown time set to 3 seconds
-    const countdownElement = document.getElementById('countdown');
-
-    // Function to show the popup
-    function showPopup() {
-        document.getElementById('popup').style.display = 'flex'; // Use flex to center
-        countdownTime = 3; // Reset countdown time
-        countdownElement.innerText = countdownTime;
+        .loading-text span:nth-child(8) {
+            filter: blur(0px);
+            animation: blur-text 1.5s 1.4s infinite linear alternate;
+        }
         
-        const countdownInterval = setInterval(() => {
-            countdownTime--;
-            countdownElement.innerText = countdownTime;
-
-            if (countdownTime <= 0) {
-                clearInterval(countdownInterval);
-                closePopup();
+        .loading-text span:nth-child(9) {
+            filter: blur(0px);
+            animation: blur-text 1.5s 1.6s infinite linear alternate;
+        }
+        @keyframes blur-text {
+            0% {
+                filter: blur(0px);
             }
-        }, 1000); // Update every second
-    }
 
-    // Show the popup every 10 minutes
-    window.onload = function() {
-        setInterval(showPopup, 600000); // 600000 milliseconds = 10 minutes
-        showPopup(); // Show immediately on load for testing
-    };
+            100% {
+                filter: blur(4px);
+            }
+        }
 
-    function closePopup() {
-        document.getElementById('popup').style.display = 'none';
+        .plyr__video-wrapper::after {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 10;
+            content: '';
+            height: 35px;
+            width: 35px;
+            background: no-repeat;
+            background-size: 40px, auto, auto;
+        }
+    </style>
+<body>
+<div id="loading" class="loading">
+<div class="loading-text">
+<span class="loading-text-words">Live Stream Tv</span>
+</div>
+</div>
+<video autoplay controls crossorigin playsinline>
+<source type="application/vnd.apple.mpegurl" src="https://d2hrvno5bw6tg2.cloudfront.net/smrtv-ch02/_definst_/smil:ch-02.smil/master.m3u8"> </video>
+ </video>
+</body>
+<script>
+    setTimeout(videovisible, 3000)
+
+    function videovisible() {
+        document.getElementById('loading').style.display = 'none'
     }
+    document.addEventListener("DOMContentLoaded", () => {
+        const e = document.querySelector("video"),
+            n = e.getElementsByTagName("source")[0].src,
+            o = {};
+        if (Hls.isSupported()) {
+            var config = {
+                maxMaxBufferLength: 100,
+            };
+            const t = new Hls(config);
+            t.loadSource(n), t.on(Hls.Events.MANIFEST_PARSED, function(n, l) {
+                const s = t.levels.map(e => e.height);
+                o.quality = {
+                    default: s[0],
+                    options: s,
+                    forced: !0,
+                    onChange: e => (function(e) {
+                        window.hls.levels.forEach((n, o) => {
+                            n.height === e && (window.hls.currentLevel = o)
+                        })
+                    })(e)
+                };
+                new Plyr(e, o)
+            }), t.attachMedia(e), window.hls = t
+        } else {
+            new Plyr(e, o)
+        }
+    });
 </script>
+</body>
+</html>
 
-			
-
-    <!-- Disable -->
-    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
-
-<!-- Disable CTRL+U & CTRL+C and Mouse Right Click -->
-
- <script type='text/javascript'>  
- var isCtrl = false;  
- document.onkeyup=function(e)  
- {  
- if(e.which == 17)  
- isCtrl=false;  
- }  
- document.onkeydown=function(e)  
- {  
- if(e.which == 17)  
- isCtrl=true;  
- if((e.which == 85) || (e.which == 67) && isCtrl == true)  
- {  
- // alert(‘Keyboard shortcuts are cool!’);  
- return false;  
- }  
- }  
- var isNS = (navigator.appName == "Netscape") ? 1 : 0;  
- if(navigator.appName == "Netscape") document.captureEvents(Event.MOUSEDOWN||Event.MOUSEUP);  
- function mischandler(){  
- return false;  
- }  
- function mousehandler(e){  
- var myevent = (isNS) ? e : event;  
- var eventbutton = (isNS) ? myevent.which : myevent.button;  
- if((eventbutton==2)||(eventbutton==3)) return false;  
- }  
- document.oncontextmenu = mischandler;  
- document.onmousedown = mousehandler;  
- document.onmouseup = mousehandler;  
- </script>  
