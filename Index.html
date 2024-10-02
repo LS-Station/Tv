@@ -56,7 +56,7 @@
         }
         .options-row {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 20px;
             margin-bottom: 20px; /* Space between rows */
             width: 100%; /* Make row full width */
@@ -99,12 +99,22 @@
 <div class="options-container" id="optionsContainer">
     <div class="row-title">Sports Channels</div>
     <div class="options-row">
-        <a href="Channel-Host/BanVsInd.html" class="option">Bangladesh Vs India</a>
+        <a href="Channel-Host/BanVsInd.html" class="option">Ban Vs Ind</a>
         <a href="Channel-Host/Toffee.html" class="option">Toffee</a>
         <a href="Channel-Host/PTV.html" class="option">PTV</a>
-        <a href="https://007tv.vercel.app/1Host/Sports/LaligaTv.html" class="option">Laliga Tv</a>
         <a href="Channel-Host/RTvSports.html" class="option">RTV Sports</a>
-        <a href="https://007tv.vercel.app/1Host/Sports/TNTSports4.html" class="option">TNT Sports4</a>
+        <a href="Channel-Host/TNT4.html" class="option">TNT4 Sports</a>
+        <a href="Channel-Host/LaligaTv.html" class="option">LaligaTv</a>
+        <a href="**" class="option">**</a>
+        <a href="**" class="option">**</a>
+        <a href="**" class="option">**</a>
+        <a href="**" class="option">**</a>
+        <a href="**" class="option">**</a>
+        <a href="**" class="option">**</a>
+        <a href="**" class="option">**</a>
+        <a href="**" class="option">**</a>
+        <a href="**" class="option">**</a>
+        <a href="**" class="option">**</a>
         <a href="**" class="option">**</a>
         <a href="**" class="option">**</a>
     </div>
@@ -132,5 +142,45 @@
     }
 </script>
 
+
+
+
+
+<script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+
+<!-- Disable CTRL+U & CTRL+C and Mouse Right Click -->
+
+ <script type='text/javascript'>  
+ var isCtrl = false;  
+ document.onkeyup=function(e)  
+ {  
+ if(e.which == 17)  
+ isCtrl=false;  
+ }  
+ document.onkeydown=function(e)  
+ {  
+ if(e.which == 17)  
+ isCtrl=true;  
+ if((e.which == 85) || (e.which == 67) && isCtrl == true)  
+ {  
+ // alert(‘Keyboard shortcuts are cool!’);  
+ return false;  
+ }  
+ }  
+ var isNS = (navigator.appName == "Netscape") ? 1 : 0;  
+ if(navigator.appName == "Netscape") document.captureEvents(Event.MOUSEDOWN||Event.MOUSEUP);  
+ function mischandler(){  
+ return false;  
+ }  
+ function mousehandler(e){  
+ var myevent = (isNS) ? e : event;  
+ var eventbutton = (isNS) ? myevent.which : myevent.button;  
+ if((eventbutton==2)||(eventbutton==3)) return false;  
+ }  
+ document.oncontextmenu = mischandler;  
+ document.onmousedown = mousehandler;  
+ document.onmouseup = mousehandler;  
+ </script>  
+
 </body>
-  </html>
+</html>
