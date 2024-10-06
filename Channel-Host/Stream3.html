@@ -1,158 +1,41 @@
-<h2></h2>
-<html>
-<head>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>sample m3u8 page</title>
+  </head>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.6.2/dist/plyr.css" />
-<script src="https://cdn.jsdelivr.net/npm/plyr@3.6.12/dist/plyr.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/hls.js@1.1.4/dist/hls.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-<style>
-        html {
-            font-family: Poppins;
-            background: #000 ;
-            margin: 0;
-            padding: 0
-        }
+  <body>
+    <!-- CSS  -->
+    <!-- file source is from: https://gist.github.com/Fazzani/8f89546e188f8086a46073dc5d4e2928 -->
+    <!-- this html page is from: https://stackoverflow.com/questions/19782389/playing-m3u8-files-with-html-video-tag -->
+    <!-- sample page: https://jlypnc.csb.app/ -->
+    <link href="https://vjs.zencdn.net/7.2.3/video-js.css" rel="stylesheet" />
 
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 9999;
-        }
+    
+    <!-- HTML -->
+    <video
+      id="hls-example"
+      class="video-js vjs-default-skin"
+      width="400"
+      height="300"
+      controls
+    >
+      <source
+        type="application/x-mpegURL"
+        src="https://edge01.iptv.digijadoo.net/live/nagorik_tv/playlist.m3u8?md5=lcpcl1heLHHo_36IBwYyaA&expires=1728418313&user=d477246e9e724f81a011b847457e71c4
+"
+      />
+    </video>
 
-        .loading-text {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            margin: auto;
-            text-align: center;
-            width: 100%;
-            height: 100px;
-            line-height: 100px;
-        }
+    <!-- JS code -->
+    <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
+    <script src="https://vjs.zencdn.net/ie8/ie8-version/videojs-ie8.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/5.14.1/videojs-contrib-hls.js"></script>
+    <script src="https://vjs.zencdn.net/7.2.3/video.js"></script>
 
-        .loading-text span {
-            display: inline-block;
-            margin: 0 5px;
-            color: #ff0000;
-            font-family: 'Quattrocento Sans', sans-serif;
-        }
-
-        .loading-text span:nth-child(1) {
-            filter: blur(0px);
-            animation: blur-text 1.5s 0s infinite linear alternate;
-        }
-
-        .loading-text span:nth-child(2) {
-            filter: blur(0px);
-            animation: blur-text 1.5s 0.2s infinite linear alternate;
-        }
-
-        .loading-text span:nth-child(3) {
-            filter: blur(0px);
-            animation: blur-text 1.5s 0.4s infinite linear alternate;
-        }
-
-        .loading-text span:nth-child(4) {
-            filter: blur(0px);
-            animation: blur-text 1.5s 0.6s infinite linear alternate;
-        }
-
-        .loading-text span:nth-child(5) {
-            filter: blur(0px);
-            animation: blur-text 1.5s 0.8s infinite linear alternate;
-        }
-
-        .loading-text span:nth-child(6) {
-            filter: blur(0px);
-            animation: blur-text 1.5s 1s infinite linear alternate;
-        }
-
-        .loading-text span:nth-child(7) {
-            filter: blur(0px);
-            animation: blur-text 1.5s 1.2s infinite linear alternate;
-        }
-
-        .loading-text span:nth-child(8) {
-            filter: blur(0px);
-            animation: blur-text 1.5s 1.4s infinite linear alternate;
-        }
-        
-        .loading-text span:nth-child(9) {
-            filter: blur(0px);
-            animation: blur-text 1.5s 1.6s infinite linear alternate;
-        }
-        @keyframes blur-text {
-            0% {
-                filter: blur(0px);
-            }
-
-            100% {
-                filter: blur(4px);
-            }
-        }
-
-        .plyr__video-wrapper::after {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            z-index: 10;
-            content: '';
-            height: 35px;
-            width: 35px;
-            background: no-repeat;
-            background-size: 40px, auto, auto;
-        }
-    </style>
-<body>
-<div id="loading" class="loading">
-<div class="loading-text">
-<span class="loading-text-words">Live Stream Tv</span>
-</div>
-</div>
-<video autoplay controls crossorigin playsinline>
-<source type="application/vnd.apple.mpegurl" src="https://test-tan-iota-90.vercel.app/live/bdix/app/PtvSports.m3u8"> </video>
- </video>
-</body>
-<script>
-    setTimeout(videovisible, 3000)
-
-    function videovisible() {
-        document.getElementById('loading').style.display = 'none'
-    }
-    document.addEventListener("DOMContentLoaded", () => {
-        const e = document.querySelector("video"),
-            n = e.getElementsByTagName("source")[0].src,
-            o = {};
-        if (Hls.isSupported()) {
-            var config = {
-                maxMaxBufferLength: 100,
-            };
-            const t = new Hls(config);
-            t.loadSource(n), t.on(Hls.Events.MANIFEST_PARSED, function(n, l) {
-                const s = t.levels.map(e => e.height);
-                o.quality = {
-                    default: s[0],
-                    options: s,
-                    forced: !0,
-                    onChange: e => (function(e) {
-                        window.hls.levels.forEach((n, o) => {
-                            n.height === e && (window.hls.currentLevel = o)
-                        })
-                    })(e)
-                };
-                new Plyr(e, o)
-            }), t.attachMedia(e), window.hls = t
-        } else {
-            new Plyr(e, o)
-        }
-    });
-</script>
-</body>
+    <script>
+      var player = videojs("hls-example");
+      player.play();
+    </script>
+  </body>
 </html>
