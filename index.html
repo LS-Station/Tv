@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live Stream TV</title>
+    <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -39,7 +40,7 @@
         .current-time {
             margin: 0;
         }
-        .iframe-container {
+        .video-container {
             position: relative;
             width: 100%;
             padding-top: 58%; /* 16:9 Aspect Ratio */
@@ -47,15 +48,6 @@
             border: 1px solid #00aaff;
             border-radius: 10px;
             overflow: hidden;
-        }
-        .iframe-container video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-            border-radius: 5px;
         }
         .footer {
             text-align: center;
@@ -95,13 +87,17 @@
 
     <div class="container">
         <!-- Video Player -->
-        <div id="video-container" class="iframe-container">
-            <video id="video" controls autoplay></video>
+        <div id="video-container" class="video-container">
+            <video id="video" class="video-js vjs-default-skin" controls autoplay>
+                <source src="http://116.204.149.16/t_sports/index.m3u8" type="application/x-mpegURL">
+                Your browser does not support the video tag.
+            </video>
         </div>
 
         <div id="channel-name" class="channel-name" style="text-align:center; font-size: 20px; color: #ff00;"></div>
     </div>
 
+    <script src="https://vjs.zencdn.net/7.10.2/video.js"></script>
     <script>
         const streams = [
             { name: "T sports HD", url: "http://116.204.149.16/t_sports/index.m3u8" },
@@ -130,42 +126,24 @@
             // Display the current channel name
             channelName.textContent = `Now playing: ${currentStream.name}`;
 
-            // Use HLS.js for .m3u8 streams
-            if (Hls.isSupported()) {
-                const hls = new Hls();
-                hls.loadSource(currentStream.url);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, function () {
-                    video.play();
-                });
-            } else {
-                // For browsers that do not support HLS.js, use the regular HTML5 video player
-                video.src = currentStream.url;
-                video.play();
-            }
+            // Change video source
+            const player = videojs(video);
+            player.src({ type: 'application/x-mpegURL', src: currentStream.url });
+            player.play();
 
             // Update index for next stream
             currentStreamIndex = (currentStreamIndex + 1) % streams.length; // loop back to first stream when finished
         }
 
-        // Current time display
-        function updateCurrentTime() {
-            const now = new Date();
-            const currentTime = now.toLocaleTimeString();
-            document.getElementById('current-time').textContent = `Current Time: ${currentTime}`;
-        }
-        setInterval(updateCurrentTime, 1000);
-
         // Initial stream load
         loadCurrentStream();
 
-        // Auto load next stream after current one ends (if autoplay doesn't work)
+        // Auto load next stream after current one ends
         const video = document.getElementById('video');
         video.onended = function() {
             loadCurrentStream();
         };
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </body>
 </html>
