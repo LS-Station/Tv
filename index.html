@@ -49,7 +49,7 @@
             border-radius: 10px;
             overflow: hidden;
         }
-        .iframe-container iframe {
+        .iframe-container video {
             position: absolute;
             top: 0;
             left: 0;
@@ -57,21 +57,6 @@
             height: 100%;
             border: none;
             border-radius: 5px;
-        }
-        .iframe-btn {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 5px;
-            background-color: #ff00;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            border: 2px solid red;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .iframe-btn:hover {
-            background-color: #d40812;
         }
         .footer {
             text-align: center;
@@ -90,11 +75,6 @@
             .header p {
                 font-size: 16px; /* Adjusted font size */
             }
-
-            .iframe-btn {
-                padding: 8px 16px; /* Smaller buttons */
-                font-size: 14px; /* Smaller text */
-            }
         }
 
         @media (max-width: 480px) {
@@ -105,21 +85,12 @@
             .header p {
                 font-size: 14px; /* Further adjusted font size */
             }
-
-            .iframe-btn {
-                padding: 6px 12px; /* Even smaller buttons */
-                font-size: 10px; /* Even smaller text */
-            }
-
-            .footer {
-                font-size: 14px; /* Adjust footer text */
-            }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>Today's Sports Match</h1>
+        <h1>Live TV Streaming</h1>
         <p class="current-time" id="current-time"></p>
     </div>
 
@@ -129,42 +100,55 @@
             <video id="video" controls autoplay></video>
         </div>
 
-        <!-- Next Button -->
-        <center>
-            <button class="iframe-btn" onclick="loadNextStream()">Next</button>
-        </center>
+        <div id="channel-name" class="channel-name" style="text-align:center; font-size: 20px; color: #ff00;"></div>
     </div>
 
     <script>
+        // Array of streams with channel names and URLs
         const streams = [
-            'https://raw.githubusercontent.com/LS-Station/streamecho/refs/heads/main/StreamEcho.m3u8', // Stream 1
-            'https://play.footfy.live/api/AGV/play.php?play=346', // Stream 2
-            'https://play.footfy.live/api/AGV/play.php?play=461', // Stream 3
-            'https://ritsatv.ru/youtube/football1G.html', // Stream 4
-            'https://allinoneott.com/live/player.php?url=https://fifabd.xyz/JOIN@TGxRANAPK33/play.m3u8?id=match-2' // Stream 5
+            { name: "T sports HD", url: "http://116.204.149.16/t_sports/index.m3u8" },
+            { name: "Movie Bangla", url: "http://stvlive.net:8080/moviebangla/index.m3u8" },
+            { name: "National_Geo_HD", url: "http://151.80.18.177:86/National_Geo_HD/index.m3u8" },
+            { name: "Histoire HD", url: "http://151.80.18.177:86/Histoire/index.m3u8" },
+            { name: "Discovery_HD", url: "http://151.80.18.177:86/Discovery_HD/index.m3u8" },
+            { name: "Eurosport_HD", url: "http://151.80.18.177:86/Eurosport_HD/index.m3u8" },
+            { name: "Disney Channel SD", url: "http://116.90.120.149:8000/play/a0bx/index.m3u8" },
+            { name: "Star Sports 1 HD Tamil", url: "http://ptu.ridsys.in/riptv/live/stream20/index.m3u8" },
+            { name: "StarPlus HD", url: "http://116.90.120.149:8000/play/a0b9/index.m3u8" },
+            { name: "True Vision Sports", url: "http://195.128.27.141:80/play/live.php?mac=00:1A:79:24:1B:18&stream=191873&extension=m3u8" },
+            { name: "TSN 1 🇨🇦", url: "http://212.102.60.231/TSN_1/index.m3u8" }
+            // Add more channels here as needed
         ];
 
         let currentStreamIndex = 0;
 
-        // Function to load the next stream
-        function loadNextStream() {
-            currentStreamIndex = (currentStreamIndex + 1) % streams.length;
+        // Function to load the current stream
+        function loadCurrentStream() {
             const video = document.getElementById('video');
-            const streamUrl = streams[currentStreamIndex];
+            const channelName = document.getElementById('channel-name');
 
-            // Using HLS.js for .m3u8 streams
+            // Get the current stream details
+            const currentStream = streams[currentStreamIndex];
+
+            // Display the current channel name
+            channelName.textContent = `Now playing: ${currentStream.name}`;
+
+            // Use HLS.js for .m3u8 streams
             if (Hls.isSupported()) {
                 const hls = new Hls();
-                hls.loadSource(streamUrl);
+                hls.loadSource(currentStream.url);
                 hls.attachMedia(video);
                 hls.on(Hls.Events.MANIFEST_PARSED, function () {
                     video.play();
                 });
             } else {
                 // For browsers that do not support HLS.js, use the regular HTML5 video player
-                video.src = streamUrl;
+                video.src = currentStream.url;
                 video.play();
             }
+
+            // Update index for next stream
+            currentStreamIndex = (currentStreamIndex + 1) % streams.length; // loop back to first stream when finished
         }
 
         // Current time display
@@ -176,7 +160,13 @@
         setInterval(updateCurrentTime, 1000);
 
         // Initial stream load
-        loadNextStream();
+        loadCurrentStream();
+        
+        // Auto load next stream after current one ends (if autoplay doesn't work)
+        const video = document.getElementById('video');
+        video.onended = function() {
+            loadCurrentStream();
+        };
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
