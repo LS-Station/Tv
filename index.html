@@ -133,11 +133,11 @@
     </div>
 
     <div class="container">
-        <!-- Iframe Container -->
-        <div class="iframe-container">
-            <iframe id="match-iframe" src="https://raw.githubusercontent.com/LS-Station/streamecho/refs/heads/main/StreamEcho.m3u8" scrolling="no" allow="accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen></iframe>
+        <!-- Video Player -->
+        <div id="video-container" class="iframe-container">
+            <video id="video" controls></video>
         </div>
-          
+        
         <!-- Iframe Source Links -->
         <center>
             <div id="iframe-links">
@@ -147,15 +147,31 @@
                 <button class="iframe-btn" onclick="changeIframeSource('https://bdixtv247.techpriyo.com/tpl/playid.php?id=CRIC_BUZZ')">Stream 04</button>
                 <button class="iframe-btn" onclick="changeIframeSource('https://stream.imotv.online/sports/sportstv.php?c=willowusa')">Stream 05</button>
                 <button class="iframe-btn" onclick="changeIframeSource('https://stream.imotv.online/sports/sportstv.php?c=asportshd')">Stream 06</button>
-                <!-- Add more streams here as per requirement -->
+                <button class="iframe-btn" onclick="changeIframeSource('https://play.footfy.live/api/AGV/play.php?play=461')">Stream 07</button>
+                <button class="iframe-btn" onclick="changeIframeSource('https://allinoneott.com/live/player.php?url=https://fifabd.xyz/JOIN@TGxRANAPK33/play.m3u8?id=match-2')">Stream 08</button>
+                <button class="iframe-btn" onclick="changeIframeSource('https://stream.imotv.online/sports/sportstv.php?c=willowusa')">Stream 09</button>
+                <button class="iframe-btn" onclick="changeIframeSource('https://stream.imotv.online/sports/sportstv.php?c=willowusa')">Stream 10</button>
+                <button class="iframe-btn" onclick="changeIframeSource('https://bdixtv247.techpriyo.com/tpl/playid.php?id=TNT_1_GB')">Stream 11</button>
             </div>
         </center>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
-        // Function to change the iframe source
+        // Function to change the video source to the selected stream
         function changeIframeSource(url) {
-            document.getElementById('match-iframe').src = url;
+            const video = document.getElementById('video');
+            const hls = new Hls();
+            if (Hls.isSupported()) {
+                hls.loadSource(url);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                    video.play();
+                });
+            } else {
+                video.src = url;
+                video.play();
+            }
         }
 
         // Current time display
