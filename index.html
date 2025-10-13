@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live Stream TV</title>
     
-    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -124,71 +123,34 @@
             .footer {
                 font-size: 14px; /* Adjust footer text */
             }
-            logo-foter {
-            width: 60%;
-            height: 10px;
-            justify-content: center;
-            align-items: center;
-            
         }
-        }
-    
-    
-  
-
-
     </style>
 </head>
 <body>
-  
-
-
-  
-    
     <div class="header">
-      
-     
         <h1>Today's Sports Match</h1>
         <p class="current-time" id="current-time"></p>
     </div>
 
-   <div class="container">
+    <div class="container">
         <!-- Iframe Container -->
         <div class="iframe-container">
-            <iframe id="match-iframe" src="https://play.footfy.live/api/AGV/play.php?play=346" scrolling="no" allow="accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen></iframe>
+            <iframe id="match-iframe" src="https://raw.githubusercontent.com/LS-Station/streamecho/refs/heads/main/StreamEcho.m3u8" scrolling="no" allow="accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen></iframe>
         </div>
           
-       
         <!-- Iframe Source Links -->
-          <center>  
-          <div id="iframe-links">
-          <button class="iframe-btn" onclick="changeIframeSource('Channel-Host/Stream1.html')">Stream 01</button>
-          <button class="iframe-btn" onclick="changeIframeSource('Channel-Host/Stream2.html')">Stream 02</button>
-          <button class="iframe-btn" onclick="changeIframeSource('Channel-Host/Stream3.html')">Stream 03</button>
-           <button class="iframe-btn" onclick="changeIframeSource('https://ritsatv.ru/youtube/football1G.html')">Stream 04</button>
-           <button class="iframe-btn" onclick="changeIframeSource('Channel-Host/Stream5.html')">Stream 05</button>
-          
-          <button class="iframe-btn" onclick="changeIframeSource('https://play.footfy.live/api/AGV/play.php?play=461')">Stream 06</button>
-          <button class="iframe-btn" onclick="changeIframeSource('https://allinoneott.com/live/player.php?url=https://fifabd.xyz/JOIN@TGxRANAPK33/play.m3u8?id=match-2')">Stream 07</button>
-          <button class="iframe-btn" onclick="changeIframeSource('https://stream.imotv.online/sports/sportstv.php?c=asportshd')">Stream 08</button>
-          <button class="iframe-btn" onclick="changeIframeSource('https://stream.imotv.online/sports/sportstv.php?c=willowusa')">Stream 09</button>
-          <button class="iframe-btn" onclick="changeIframeSource('https://bdixtv247.techpriyo.com/tpl/playid.php?id=CRIC_BUZZ')">Stream 10</button>
-          <button class="iframe-btn" onclick="changeIframeSource('https://bdixtv247.techpriyo.com/tpl/playid.php?id=TNT_1_GB')">Stream 11</button>
-         
-          <button class="iframe-btn" onclick="changeIframeSource('https://stream.imotv.online/sports/sportstv.php?c=ptvpk')">Stream 12</button>
-          <button class="iframe-btn" onclick="changeIframeSource('https://tv.durbinlive.pro/api/live/iframe.php?c=https://streambtw.com/iframe/ch7.php')">Stream 13</button>
-          <button class="iframe-btn" onclick="changeIframeSource('https://stream.imotv.online/sports/sportstv.php?c=tenspk')">Stream 14</button>
-          <button class="iframe-btn" onclick="changeIframeSource('https://stream.imotv.online/toffe/?play=9864cbf691c0')">Stream 15</button>
-              
-          
-          <button class="iframe-btn" onclick="changeIframeSource('https://stream.imotv.online/sports/sportstv.php?c=starhindi')">Stream 16</button>
-           <button class="iframe-btn" onclick="changeIframeSource('https://allinoneott.com/live/player.php?url=https://fifabd.xyz/JOIN@TGxRANAPK33/play.m3u8?id=match-1')">Stream 17</button>
-           <button class="iframe-btn" onclick="changeIframeSource('https://play.footfy.live/api/AGV/play.php?play=346')">Stream 18</button>
-           
-          </div>
-          </center>
-     
-
+        <center>
+            <div id="iframe-links">
+                <button class="iframe-btn" onclick="changeIframeSource('https://raw.githubusercontent.com/LS-Station/streamecho/refs/heads/main/StreamEcho.m3u8')">Stream 01</button>
+                <button class="iframe-btn" onclick="changeIframeSource('https://ritsatv.ru/youtube/football1G.html')">Stream 02</button>
+                <button class="iframe-btn" onclick="changeIframeSource('https://play.footfy.live/api/AGV/play.php?play=346')">Stream 03</button>
+                <button class="iframe-btn" onclick="changeIframeSource('https://bdixtv247.techpriyo.com/tpl/playid.php?id=CRIC_BUZZ')">Stream 04</button>
+                <button class="iframe-btn" onclick="changeIframeSource('https://stream.imotv.online/sports/sportstv.php?c=willowusa')">Stream 05</button>
+                <button class="iframe-btn" onclick="changeIframeSource('https://stream.imotv.online/sports/sportstv.php?c=asportshd')">Stream 06</button>
+                <!-- Add more streams here as per requirement -->
+            </div>
+        </center>
+    </div>
 
     <script>
         // Function to change the iframe source
@@ -204,10 +166,6 @@
         }
         setInterval(updateCurrentTime, 1000);
     </script>
-     
-     <br></br>
-     <br></br>
-     <br> </br>
-         <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+
 </body>
 </html>
