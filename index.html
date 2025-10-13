@@ -80,15 +80,6 @@
             margin-top: 20px;
             color: #fff;
         }
-        .telegram-btn {
-            display: block;
-            margin: 10px auto;
-            width: 40px; /* Smaller size for responsiveness */
-        }
-        .telegram-btn img {
-            width: 100%;
-            border-radius: 5px;
-        }
 
         /* Media Queries */
         @media (max-width: 768px) {
@@ -135,41 +126,43 @@
     <div class="container">
         <!-- Video Player -->
         <div id="video-container" class="iframe-container">
-            <video id="video" controls></video>
+            <video id="video" controls autoplay></video>
         </div>
-        
-        <!-- Iframe Source Links -->
+
+        <!-- Next Button -->
         <center>
-            <div id="iframe-links">
-                <button class="iframe-btn" onclick="changeIframeSource('https://raw.githubusercontent.com/LS-Station/streamecho/refs/heads/main/StreamEcho.m3u8')">Stream 01</button>
-                <button class="iframe-btn" onclick="changeIframeSource('https://ritsatv.ru/youtube/football1G.html')">Stream 02</button>
-                <button class="iframe-btn" onclick="changeIframeSource('https://play.footfy.live/api/AGV/play.php?play=346')">Stream 03</button>
-                <button class="iframe-btn" onclick="changeIframeSource('https://bdixtv247.techpriyo.com/tpl/playid.php?id=CRIC_BUZZ')">Stream 04</button>
-                <button class="iframe-btn" onclick="changeIframeSource('https://stream.imotv.online/sports/sportstv.php?c=willowusa')">Stream 05</button>
-                <button class="iframe-btn" onclick="changeIframeSource('https://stream.imotv.online/sports/sportstv.php?c=asportshd')">Stream 06</button>
-                <button class="iframe-btn" onclick="changeIframeSource('https://play.footfy.live/api/AGV/play.php?play=461')">Stream 07</button>
-                <button class="iframe-btn" onclick="changeIframeSource('https://allinoneott.com/live/player.php?url=https://fifabd.xyz/JOIN@TGxRANAPK33/play.m3u8?id=match-2')">Stream 08</button>
-                <button class="iframe-btn" onclick="changeIframeSource('https://stream.imotv.online/sports/sportstv.php?c=willowusa')">Stream 09</button>
-                <button class="iframe-btn" onclick="changeIframeSource('https://stream.imotv.online/sports/sportstv.php?c=willowusa')">Stream 10</button>
-                <button class="iframe-btn" onclick="changeIframeSource('https://bdixtv247.techpriyo.com/tpl/playid.php?id=TNT_1_GB')">Stream 11</button>
-            </div>
+            <button class="iframe-btn" onclick="loadNextStream()">Next</button>
         </center>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
-        // Function to change the video source to the selected stream
-        function changeIframeSource(url) {
+        const streams = [
+            'https://raw.githubusercontent.com/LS-Station/streamecho/refs/heads/main/StreamEcho.m3u8', // Stream 1
+            'https://play.footfy.live/api/AGV/play.php?play=346', // Stream 2
+            'https://play.footfy.live/api/AGV/play.php?play=461', // Stream 3
+            'https://ritsatv.ru/youtube/football1G.html', // Stream 4
+            'https://allinoneott.com/live/player.php?url=https://fifabd.xyz/JOIN@TGxRANAPK33/play.m3u8?id=match-2' // Stream 5
+        ];
+
+        let currentStreamIndex = 0;
+
+        // Function to load the next stream
+        function loadNextStream() {
+            currentStreamIndex = (currentStreamIndex + 1) % streams.length;
             const video = document.getElementById('video');
-            const hls = new Hls();
+            const streamUrl = streams[currentStreamIndex];
+
+            // Using HLS.js for .m3u8 streams
             if (Hls.isSupported()) {
-                hls.loadSource(url);
+                const hls = new Hls();
+                hls.loadSource(streamUrl);
                 hls.attachMedia(video);
                 hls.on(Hls.Events.MANIFEST_PARSED, function () {
                     video.play();
                 });
             } else {
-                video.src = url;
+                // For browsers that do not support HLS.js, use the regular HTML5 video player
+                video.src = streamUrl;
                 video.play();
             }
         }
@@ -181,7 +174,11 @@
             document.getElementById('current-time').textContent = `Current Time: ${currentTime}`;
         }
         setInterval(updateCurrentTime, 1000);
+
+        // Initial stream load
+        loadNextStream();
     </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </body>
 </html>
