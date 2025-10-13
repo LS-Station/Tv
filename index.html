@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live Stream TV</title>
-    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -104,7 +103,6 @@
     </div>
 
     <script>
-        // Array of streams with channel names and URLs
         const streams = [
             { name: "T sports HD", url: "http://116.204.149.16/t_sports/index.m3u8" },
             { name: "Movie Bangla", url: "http://stvlive.net:8080/moviebangla/index.m3u8" },
@@ -117,7 +115,6 @@
             { name: "StarPlus HD", url: "http://116.90.120.149:8000/play/a0b9/index.m3u8" },
             { name: "True Vision Sports", url: "http://195.128.27.141:80/play/live.php?mac=00:1A:79:24:1B:18&stream=191873&extension=m3u8" },
             { name: "TSN 1 🇨🇦", url: "http://212.102.60.231/TSN_1/index.m3u8" }
-            // Add more channels here as needed
         ];
 
         let currentStreamIndex = 0;
@@ -161,7 +158,7 @@
 
         // Initial stream load
         loadCurrentStream();
-        
+
         // Auto load next stream after current one ends (if autoplay doesn't work)
         const video = document.getElementById('video');
         video.onended = function() {
