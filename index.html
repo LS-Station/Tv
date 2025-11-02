@@ -3,30 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>স্মার্ট M3U চ্যানেল টেস্টার প্লেয়ার</title>
+    <title>M3U চ্যানেল টেস্টার প্লেয়ার (FINAL)</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.15"></script>
     <style>
-        /* আপনার জন্য ডিজাইন করা স্টাইল */
+        /* ডিজাইন */
         body { font-family: 'Arial', sans-serif; background: #1a1a2e; color: #e0e0ff; padding: 20px; }
         .container { max-width: 900px; margin: 0 auto; background: #2c2c54; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); }
         h1 { color: #00d4ff; text-align: center; margin-bottom: 20px; font-size: 1.8rem; }
         .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
         #streamInput { flex-grow: 1; padding: 12px; border-radius: 8px; border: 1px solid #4a4a7d; background: #1a1a2e; color: #e0e0ff; font-size: 1rem; }
-        #loadButton { padding: 12px 25px; background: #4caf50; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; transition: background 0.2s; }
-        #loadButton:hover { background: #45a049; }
+        #loadButton { padding: 12px 25px; background: #ff5722; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; transition: background 0.2s; }
+        #loadButton:hover { background: #e64a19; }
         .video-container { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 8px; margin-bottom: 15px; }
         #videoPlayer { width: 100%; height: 100%; border-radius: 8px; }
         #statusMessage { padding: 10px; border-radius: 8px; text-align: center; font-weight: bold; }
         .status-loading { background: #ffc107; color: #333; }
         .status-success { background: #4caf50; color: white; }
         .status-error { background: #f44336; color: white; }
-        .status-fixed { background: #0088CC; color: white; } /* নতুন প্রক্সি ফিক্সড স্ট্যাটাস */
+        .status-fixed { background: #0088CC; color: white; } /* ফিক্সড প্রক্সি */
+        .status-direct { background: #4CAF50; color: white; } /* সরাসরি লোড */
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>স্মার্ট M3U চ্যানেল টেস্টার প্লেয়ার (স্থির প্রক্সি মোড)</h1>
-        <p style="margin-bottom: 15px; color: #aaaaaa;">প্লেয়ারটি প্রথমে সরাসরি লোড করবে। যদি প্রক্সি লাগে, তবে যে প্রক্সিতে স্ট্রীমটি সচল হবে, সেটি আর পরিবর্তন করবে না (স্থির থাকবে)।</p>
+        <h1>M3U চ্যানেল টেস্টার প্লেয়ার (চূড়ান্ত)</h1>
+        <p style="margin-bottom: 15px; color: #aaaaaa;">যে লিংকটি চলবে, সেটি **সবুজ/নীল** স্ট্যাটাস দেবে এবং স্থির থাকবে।</p>
         
         <div class="input-group">
             <input type="text" id="streamInput" placeholder="চ্যানেল স্ট্রীম URL এখানে পেস্ট করুন (যেমন: http://example.com/live/stream.m3u8)">
@@ -41,7 +42,7 @@
     </div>
 
     <script>
-        // শক্তিশালী প্রক্সি লিস্ট (CORS বাইপাসের জন্য)
+        // শক্তিশালী এবং আপডেট করা প্রক্সি লিস্ট
         const PROXIES = [
             'http://cors.tundracast.com:2000/', 
             'https://api.allorigins.win/raw?url=', 
@@ -56,7 +57,8 @@
         let currentHls = null;
         let originalUrl = '';
         let currentRetry = 0;
-        let isProxyFixed = false; // প্রক্সি স্থির হয়েছে কি না, তা ট্র্যাক করার জন্য নতুন ফ্ল্যাগ
+        let isProxyFixed = false;
+        let fixedProxyIndex = null; // কোন প্রক্সিটি সচল, তা ট্র্যাক করার জন্য
 
         // স্ট্যাটাস বার আপডেট করার ফাংশন
         function updateStatus(message, type) {
@@ -74,7 +76,6 @@
                 return;
             }
             
-            // পূর্বের স্ট্রীম ধ্বংস এবং অবস্থা রিসেট
             if (currentHls) {
                 currentHls.destroy();
                 currentHls = null;
@@ -82,6 +83,7 @@
             
             currentRetry = 0;
             isProxyFixed = false; 
+            fixedProxyIndex = null;
             updateStatus('সরাসরি লোড করার চেষ্টা করা হচ্ছে...', 'loading');
             
             // 1. প্রথমে সরাসরি লোড করার চেষ্টা (null প্রক্সি হিসেবে)
@@ -112,42 +114,47 @@
                 currentHls = null;
             }
             
-            // যদি এটি একটি প্রক্সি চেষ্টা হয়, তবে বর্তমান প্রক্সিটি ফিক্স করে দেওয়া
+            // যদি এটি প্রক্সি লোড হয়
             if (proxyIndex !== null) {
                 isProxyFixed = true;
+                fixedProxyIndex = proxyIndex;
+            } else {
+                // যদি এটি সরাসরি লোড হয়
+                isProxyFixed = false;
+                fixedProxyIndex = null;
             }
+
 
             if (Hls.isSupported()) {
                 currentHls = new Hls({
                     lowLatencyMode: true,
-                    xhrSetup: (xhr) => { xhr.timeout = 8000; } // 8 সেকেন্ডের মধ্যে সাড়া দিতে হবে
+                    xhrSetup: (xhr) => { xhr.timeout = 8000; } 
                 });
 
                 currentHls.loadSource(url);
                 currentHls.attachMedia(video);
 
                 currentHls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    const statusType = (proxyIndex === null) ? 'success' : 'fixed';
                     const message = (proxyIndex === null) ? '✅ সরাসরি লোড সফল! লিংকটি সচল।' : `✅ প্রক্সি ${proxyIndex + 1} সফল। এই প্রক্সিটি স্থির রাখা হলো।`;
-                    updateStatus(message, statusType);
+                    updateStatus(message, (proxyIndex === null) ? 'direct' : 'fixed');
                     video.play().catch(e => {
                         updateStatus('❌ অটো-প্লে ব্যর্থ হয়েছে। ম্যানুয়ালি প্লে করুন।', 'error');
                     });
                 });
 
                 currentHls.on(Hls.Events.ERROR, (event, data) => {
-                    // যদি স্ট্রীমটি **ইতিমধ্যে চলতে থাকে এবং ফিক্সড মোডে থাকে**
+                    // যদি এটি স্থির প্রক্সি মোডে থাকে
                     if (isProxyFixed && data.type === 'networkError') {
-                        // **প্রক্সি পরিবর্তন না করে শুধু মিডিয়া রিকভার করার চেষ্টা করা হবে**
-                        console.log("Fixed Proxy Mode: Attempting media recovery...");
-                        updateStatus(`⚠️ প্রক্সি ${proxyIndex + 1} চলছে, কিন্তু সংযোগে সমস্যা। রিকভার করার চেষ্টা করছে...`, 'fixed');
+                        // প্রক্সি পরিবর্তন না করে মিডিয়া রিকভার করার চেষ্টা
+                        console.log(`Fixed Proxy Mode (${fixedProxyIndex + 1}): Attempting media recovery...`);
+                        updateStatus(`⚠️ প্রক্সি ${fixedProxyIndex + 1} চলছে, কিন্তু সংযোগে সমস্যা। রিকভার করার চেষ্টা করছে...`, 'fixed');
                         currentHls.recoverMediaError();
                         return;
                     }
                     
-                    // ফ্যাটাল নেটওয়ার্ক এরর পেলে
+                    // যদি নেটওয়ার্ক/কোর্স ত্রুটি হয়, এবং এটি স্থির মোড না হয়
                     if (data.fatal && data.type === 'networkError') {
-                        console.error("HLS Network Error:", data);
+                        console.error("HLS Network Error, attempting proxy switch:", data);
                         handleError();
                     }
                     // অন্যান্য ফ্যাটাল এরর
@@ -180,6 +187,7 @@
             } else {
                 // সব প্রক্সি ব্যর্থ
                 isProxyFixed = false;
+                fixedProxyIndex = null;
                 updateStatus('❌ সব প্রক্সি চেষ্টা করা হয়েছে। লিংকটি কাজ করছে না বা ISP ব্লকড।', 'error');
             }
         }
