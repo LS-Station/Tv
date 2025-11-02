@@ -1,149 +1,113 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Stream TV</title>
-    <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet">
+    <title>M3U চ্যানেল টেস্টার প্লেয়ার</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.15"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #0e0e0e;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            flex-direction: column;
-        }
-        .container {
-            width: 95%;
-            max-width: 700px;
-            padding: 10px;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .header h1 {
-            font-size: 28px;
-            color: #fff700;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-        .header p {
-            font-size: 18px;
-            margin: 0;
-        }
-        .current-time {
-            margin: 0;
-        }
-        .video-container {
-            position: relative;
-            width: 100%;
-            padding-top: 58%; /* 16:9 Aspect Ratio */
-            margin-top: 20px;
-            border: 1px solid #00aaff;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .footer {
-            text-align: center;
-            padding: 10px;
-            background-color: #1c1c1c;
-            margin-top: 20px;
-            color: #fff;
-        }
-
-        /* Media Queries */
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 24px; /* Smaller title on smaller screens */
-            }
-
-            .header p {
-                font-size: 16px; /* Adjusted font size */
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header h1 {
-                font-size: 20px; /* Even smaller title */
-            }
-
-            .header p {
-                font-size: 14px; /* Further adjusted font size */
-            }
-        }
+        /* আপনার জন্য ডিজাইন করা স্টাইল */
+        body { font-family: 'Arial', sans-serif; background: #1a1a2e; color: #e0e0ff; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: #2c2c54; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); }
+        h1 { color: #00d4ff; text-align: center; margin-bottom: 20px; font-size: 1.8rem; }
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        #streamInput { flex-grow: 1; padding: 12px; border-radius: 8px; border: 1px solid #4a4a7d; background: #1a1a2e; color: #e0e0ff; font-size: 1rem; }
+        #loadButton { padding: 12px 25px; background: #4caf50; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; transition: background 0.2s; }
+        #loadButton:hover { background: #45a049; }
+        .video-container { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 8px; margin-bottom: 15px; }
+        #videoPlayer { width: 100%; height: 100%; border-radius: 8px; }
+        #statusMessage { padding: 10px; border-radius: 8px; text-align: center; font-weight: bold; }
+        .status-loading { background: #ffc107; color: #333; }
+        .status-success { background: #4caf50; color: white; }
+        .status-error { background: #f44336; color: white; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Live TV Streaming</h1>
-        <p class="current-time" id="current-time"></p>
-    </div>
-
     <div class="container">
-        <!-- Video Player -->
-        <div id="video-container" class="video-container">
-            <video id="video" class="video-js vjs-default-skin" controls autoplay>
-                <source src="http://116.204.149.16/t_sports/index.m3u8" type="application/x-mpegURL">
-                Your browser does not support the video tag.
-            </video>
+        <h1>M3U চ্যানেল টেস্টার প্লেয়ার</h1>
+        <p style="margin-bottom: 15px; color: #aaaaaa;">আপনি যে চ্যানেলের লিংক (M3U8/HLS) পরীক্ষা করতে চান, সেটি নিচে দিন এবং "স্ট্রীম লোড করুন" বাটনে ক্লিক করুন।</p>
+        
+        <div class="input-group">
+            <input type="text" id="streamInput" placeholder="চ্যানেল স্ট্রীম URL এখানে পেস্ট করুন (যেমন: http://example.com/live/stream.m3u8)">
+            <button id="loadButton" onclick="loadStream()">স্ট্রীম লোড করুন</button>
         </div>
-
-        <div id="channel-name" class="channel-name" style="text-align:center; font-size: 20px; color: #ff00;"></div>
+        
+        <div class="video-container">
+            <video id="videoPlayer" controls autoplay playsinline></video>
+        </div>
+        
+        <div id="statusMessage" class="status-loading">স্ট্যাটাস: পরীক্ষার জন্য লিংক দিন</div>
     </div>
 
-    <script src="https://vjs.zencdn.net/7.10.2/video.js"></script>
     <script>
-        const streams = [
-            { name: "T sports HD", url: "http://116.204.149.16/t_sports/index.m3u8" },
-            { name: "Movie Bangla", url: "http://stvlive.net:8080/moviebangla/index.m3u8" },
-            { name: "National_Geo_HD", url: "http://151.80.18.177:86/National_Geo_HD/index.m3u8" },
-            { name: "Histoire HD", url: "http://151.80.18.177:86/Histoire/index.m3u8" },
-            { name: "Discovery_HD", url: "http://151.80.18.177:86/Discovery_HD/index.m3u8" },
-            { name: "Eurosport_HD", url: "http://151.80.18.177:86/Eurosport_HD/index.m3u8" },
-            { name: "Disney Channel SD", url: "http://116.90.120.149:8000/play/a0bx/index.m3u8" },
-            { name: "Star Sports 1 HD Tamil", url: "http://ptu.ridsys.in/riptv/live/stream20/index.m3u8" },
-            { name: "StarPlus HD", url: "http://116.90.120.149:8000/play/a0b9/index.m3u8" },
-            { name: "True Vision Sports", url: "http://195.128.27.141:80/play/live.php?mac=00:1A:79:24:1B:18&stream=191873&extension=m3u8" },
-            { name: "TSN 1 🇨🇦", url: "http://212.102.60.231/TSN_1/index.m3u8" }
-        ];
+        // নির্ভরযোগ্য CORS বাইপাসের জন্য একটি প্রক্সি URL
+        // এটি আপনার ব্রাউজারের CORS নীতি এড়িয়ে লিংক লোড করতে সাহায্য করবে।
+        const PROXY_URL = 'https://api.allorigins.win/raw?url='; 
+        let currentHls = null;
 
-        let currentStreamIndex = 0;
-
-        // Function to load the current stream
-        function loadCurrentStream() {
-            const video = document.getElementById('video');
-            const channelName = document.getElementById('channel-name');
-
-            // Get the current stream details
-            const currentStream = streams[currentStreamIndex];
-
-            // Display the current channel name
-            channelName.textContent = `Now playing: ${currentStream.name}`;
-
-            // Change video source
-            const player = videojs(video);
-            player.src({ type: 'application/x-mpegURL', src: currentStream.url });
-            player.play();
-
-            // Update index for next stream
-            currentStreamIndex = (currentStreamIndex + 1) % streams.length; // loop back to first stream when finished
+        // স্ট্যাটাস বার আপডেট করার ফাংশন
+        function updateStatus(message, type) {
+            const statusElement = document.getElementById('statusMessage');
+            statusElement.textContent = `স্ট্যাটাস: ${message}`;
+            statusElement.className = ''; 
+            statusElement.classList.add('status-' + type);
         }
 
-        // Initial stream load
-        loadCurrentStream();
+        function loadStream() {
+            const rawUrl = document.getElementById('streamInput').value.trim();
+            const video = document.getElementById('videoPlayer');
 
-        // Auto load next stream after current one ends
-        const video = document.getElementById('video');
-        video.onended = function() {
-            loadCurrentStream();
-        };
+            if (!rawUrl) {
+                updateStatus('লিংকটি খালি রাখা যাবে না!', 'error');
+                return;
+            }
+            
+            // পূর্বের কোনো স্ট্রীম চললে তা বন্ধ করা হচ্ছে
+            if (currentHls) {
+                currentHls.destroy();
+                currentHls = null;
+            }
+            
+            // CORS বাইপাসের জন্য মূল লিংকের সাথে প্রক্সি URL যুক্ত করা হলো
+            const proxyUrl = PROXY_URL + encodeURIComponent(rawUrl);
+
+            updateStatus('লোড হচ্ছে... (প্রক্সি ব্যবহার করা হচ্ছে)', 'loading');
+            video.pause();
+            video.removeAttribute('src'); 
+
+            if (Hls.isSupported()) {
+                currentHls = new Hls();
+                
+                // HLS সোর্স লোড করার চেষ্টা
+                currentHls.loadSource(proxyUrl);
+                currentHls.attachMedia(video);
+
+                currentHls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    updateStatus('✅ স্ট্রীম সফলভাবে লোড হয়েছে! লিংকটি সচল।', 'success');
+                    video.play().catch(e => {
+                        console.error("Autoplay failed:", e);
+                        updateStatus('❌ অটো-প্লে ব্যর্থ হয়েছে। ম্যানুয়ালি প্লে করুন।', 'error');
+                    });
+                });
+
+                currentHls.on(Hls.Events.ERROR, (event, data) => {
+                    if (data.fatal) {
+                        currentHls.destroy();
+                        let errorMessage = '❌ স্ট্রীম লোড করতে ব্যর্থ। লিংকটি কাজ করছে না অথবা VPN/অন্য প্রক্সি লাগবে।';
+                        if (data.details.includes('networkError')) {
+                             errorMessage = '❌ নেটওয়ার্ক ত্রুটি। লিংকটি ব্লকড অথবা সার্ভার অফলাইন।';
+                        }
+                        updateStatus(errorMessage, 'error');
+                        console.error("Fatal HLS Error:", data);
+                    }
+                });
+            } else {
+                // HLS.js সমর্থিত না হলে সাধারণ ভিডিও লোড করার চেষ্টা
+                video.src = proxyUrl;
+                video.play();
+                updateStatus('⚠️ HLS.js নেই, সাধারণ প্লেব্যাক ব্যবহার করা হচ্ছে।', 'error');
+            }
+        }
     </script>
-
 </body>
 </html>
